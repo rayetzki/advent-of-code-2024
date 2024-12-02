@@ -1,0 +1,9 @@
+{
+  "name": "advent-of-code-2024",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": ["advent-of-code-2024", "node"],
+  "author": "Illia Raietskyi",
+  "license": "ISC",
+  "description": "My solutions to Advent of Code 2024 puzzles"
+}
