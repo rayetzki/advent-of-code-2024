@@ -1,9 +1,23 @@
 {
   "name": "advent-of-code-2024",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
-  "keywords": ["advent-of-code-2024", "node"],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rayetzki/advent-of-code-2024.git"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "keywords": [
+    "advent-of-code-2024",
+    "node"
+  ],
   "author": "Illia Raietskyi",
   "license": "ISC",
-  "description": "My solutions to Advent of Code 2024 puzzles"
+  "description": "My solutions to Advent of Code 2024 puzzles",
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  }
 }
