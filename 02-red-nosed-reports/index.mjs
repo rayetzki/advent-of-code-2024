@@ -43,7 +43,7 @@ const totalSafeReportsWithDamping = reports.reduce((acc, report) => {
     ]);
 
     if (isSafeDamped) {
-      return acc + 1
+      return acc + 1;
     };
   }
 
