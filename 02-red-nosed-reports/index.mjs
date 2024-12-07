@@ -1,9 +1,7 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { REGEX, CHARS } from '../common.mjs';
+import { getFileInput } from '../utils.mjs';
 
-const inputFilePath = join('./', import.meta.dirname, 'input.txt');
-const fileInput = await readFile(inputFilePath, { encoding: 'utf-8' });
+const fileInput = await getFileInput('input.txt');
 
 const reports = fileInput
   .split(REGEX.NEWLINE)
