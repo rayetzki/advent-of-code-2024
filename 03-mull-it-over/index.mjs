@@ -18,7 +18,6 @@ console.log('-- PART 2 --');
 
 const regexTwo = /mul\((?<first>\d+)\,(?<second>\d+)\)|do\(\)|don't\(\)/g;
 
-console.time();
 const part2 = [...fileInput.matchAll(regexTwo)]
   .reduce((acc, match) => {
     if (match[0] === "do()") {
@@ -34,5 +33,4 @@ const part2 = [...fileInput.matchAll(regexTwo)]
     return acc;
   }, { isAllowedToMultiply: true, multiplicationSum: 0 });
 
-console.timeEnd();
 console.log('Result:', part2.multiplicationSum);
