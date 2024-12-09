@@ -9,4 +9,6 @@ export const REGEX = {
 
 export const CHARS = {
   SPACE: ' ',
+  COMMA: ',',
+  NEWLINE: '\n',
 };
