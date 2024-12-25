@@ -18,6 +18,6 @@
   "license": "ISC",
   "description": "My solutions to Advent of Code 2024 puzzles",
   "devDependencies": {
-    "@types/node": "^22.10.1"
+    "@types/node": "^22.10.2"
   }
 }
