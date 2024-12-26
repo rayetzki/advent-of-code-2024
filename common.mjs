@@ -10,5 +10,7 @@ export const REGEX = {
 export const CHARS = {
   SPACE: ' ',
   COMMA: ',',
+  COLON: ':',
   NEWLINE: '\n',
+  HASH: '#'
 };
