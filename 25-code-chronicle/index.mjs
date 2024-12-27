@@ -1,7 +1,7 @@
 import { getFileInput } from '../utils.mjs';
 import { CHARS, REGEX } from '../common.mjs';
 
-const input = await getFileInput('test.txt');
+const input = await getFileInput('input.txt');
 
 const schemas = input
   .split(REGEX.DOUBLE_NEWLINE)

@@ -4,7 +4,7 @@ export const REGEX = {
   NEWLINE: /\n/g,
   NUMS: /[0-9]+/g,
   DOUBLE_NEWLINE: /\n\n/,
-  SEPARATOR: /,|-|:|\|/,
+  SEPARATOR: /,?\s|-|:|\|/,
 };
 
 export const CHARS = {
