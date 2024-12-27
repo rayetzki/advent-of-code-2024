@@ -1,7 +1,7 @@
 import { getFileInput } from '../utils.mjs';
 import { REGEX } from '../common.mjs';
 
-const input = await getFileInput('test.txt');
+const input = await getFileInput('input.txt');
 
 const [towelsInput, designs] = input.split(REGEX.DOUBLE_NEWLINE);
 
