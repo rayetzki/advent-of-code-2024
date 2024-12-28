@@ -12,8 +12,8 @@ const ELEMENTS = {
   END: 'E',
   N: '^',
   S: 'v',
-  E: '<',
-  W: '>'
+  E: '>',
+  W: '<'
 };
 
 const TURNS = {
@@ -58,8 +58,15 @@ for (let x = 0; x < maze[0].length; x++) {
   }
 }
 
-const dijkstra = (start, end) => {
+const drawMaze = (maze) => console.log(maze.map(line => line.join('')).join('\n'));
+
+console.log('-- PART 1 --');
+
+const dijkstraBestPathByCost = (start, end) => {
+  const grid = [...maze];
+
   const visited = new Map();
+  
   const queue = [{
     position: [...start],
     cost: 0,
@@ -77,9 +84,11 @@ const dijkstra = (start, end) => {
       while (pathNode.parent) {
         const { position, direction } = pathNode;
         const [x, y] = position;
-        maze[y][x] = ELEMENTS[direction];
+        grid[y][x] = ELEMENTS[direction];
         pathNode = pathNode.parent;
       }
+      
+      drawMaze(grid);
       return currentNode.cost;
     }
 
@@ -95,7 +104,7 @@ const dijkstra = (start, end) => {
     const [forwardX, forwardY] = [currentNode.position[0] + dx, currentNode.position[1] + dy];
     const forwardKey = [forwardX, forwardY, currentNode.direction].join();
 
-    if (!visited.has(forwardKey) && maze?.[forwardY]?.[forwardX] !== ELEMENTS.WALL) {
+    if (!visited.has(forwardKey) && grid?.[forwardY]?.[forwardX] !== ELEMENTS.WALL) {
       queue.push({
         position: [forwardX, forwardY],
         cost: currentNode.cost + COST.MOVE,
@@ -136,7 +145,101 @@ const dijkstra = (start, end) => {
   throw new Error('No path found');
 }
 
-const part1 = dijkstra(start, end);
+const lowestCost = dijkstraBestPathByCost(start, end);
 
-console.log(maze.map(line => line.join('')).join('\n'));
-console.log('Result:', part1);
+console.log('Result:', lowestCost);
+
+console.log('-- PART 2 --');
+
+const dijkstraAllBestPaths = (start, end, lowestCost) => {
+  const grid = [...maze];
+
+  const visited = new Map();
+  const uniquePaths = new Set([start.join()]);
+  
+  const queue = [{
+    position: [...start],
+    cost: 0,
+    direction: 'E',
+    parent: null,
+  }];
+
+  while (queue.length > 0) {
+    queue.sort((a, b) => a.cost - b.cost);
+    
+    const currentNode = queue.shift();
+    
+    const key = [...currentNode.position, currentNode.direction].join();
+  
+    if (currentNode.cost > lowestCost) {
+      continue;
+    }
+    
+    if (visited.has(key) && (visited.get(key) < currentNode.cost)) {
+      continue;
+    }
+
+    visited.set(key, currentNode.cost);
+
+    if (
+      currentNode.position[0] === end[0] &&
+      currentNode.position[1] === end[1] &&
+      currentNode.cost === lowestCost
+    ) {
+      uniquePaths.add(currentNode.position.join());
+      let pathNode = currentNode.parent;
+      while (pathNode.parent) {
+        uniquePaths.add(pathNode.position.join());
+        pathNode = pathNode.parent;
+      }
+      continue;
+    }
+
+    const [dx, dy] = DIRECTIONS[currentNode.direction];
+    const [forwardX, forwardY] = [currentNode.position[0] + dx, currentNode.position[1] + dy];
+    const forwardKey = [forwardX, forwardY, currentNode.direction].join();
+
+    if (!visited.has(forwardKey) && grid?.[forwardY]?.[forwardX] !== ELEMENTS.WALL) {
+      queue.push({
+        position: [forwardX, forwardY],
+        cost: currentNode.cost + COST.MOVE,
+        direction: currentNode.direction,
+        parent: currentNode,
+      });
+    }
+
+    const turnLeftDirection = TURNS.LEFT[currentNode.direction];
+    const [turnLeftdX, turnLeftdY] = DIRECTIONS[turnLeftDirection];
+    const [turnLeftX, turnLeftY] = [currentNode.position[0] + turnLeftdX, currentNode.position[1] + turnLeftdY];
+    const turnLeftKey = [turnLeftX, turnLeftY, turnLeftDirection].join();
+
+    if (!visited.has(turnLeftKey) && maze?.[turnLeftY]?.[turnLeftX] !== ELEMENTS.WALL) {
+      queue.push({
+        position: [turnLeftX, turnLeftY],
+        cost: currentNode.cost + COST.TURN + COST.MOVE,
+        direction: turnLeftDirection,
+        parent: currentNode,
+      });
+    }
+
+    const turnRightDirection = TURNS.RIGHT[currentNode.direction];
+    const [turnRightdX, turnRightdY] = DIRECTIONS[turnRightDirection];
+    const [turnRightX, turnRightY] = [currentNode.position[0] + turnRightdX, currentNode.position[1] + turnRightdY];
+    const turnRightKey = [turnRightX, turnRightY, turnRightDirection].join();
+
+    if (!visited.has(turnRightKey) && maze?.[turnRightY]?.[turnRightX] !== ELEMENTS.WALL) {
+      queue.push({
+        position: [turnRightX, turnRightY],
+        cost: currentNode.cost + COST.TURN + COST.MOVE,
+        direction: turnRightDirection,
+        parent: currentNode,
+      });
+    }
+  }
+
+  return uniquePaths;
+}
+
+const uniqueTiles = dijkstraAllBestPaths(start, end, lowestCost);
+
+console.log('Result:', uniqueTiles.size);
