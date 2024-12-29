@@ -34,8 +34,6 @@ const initRegisters = () => {
 
 const startInstructions = program.match(programRegex)[1].split(CHARS.COMMA);
 
-console.log('-- PART 1 --');
-
 const runProgram = (instructions, regs) => {
   const output = [];
   
@@ -53,23 +51,19 @@ const runProgram = (instructions, regs) => {
 
     switch (OPCODES[opcode]) {
       case 'adv': {
-        const combo = getComboOperand(operand); 
-        const numerator = regs.A;
-        const denominator = 2 ** combo;
-        regs.A = Math.trunc(numerator / denominator);
+        regs.A = regs.A >> getComboOperand(operand);
         pointer += 2;
         break;
       }
 
       case 'bxl': {
-        regs.B = regs.B ^ operand;
+        regs.B = (regs.B ^ operand) >>> 0;
         pointer += 2;
         break;
       }
       
       case 'bst': {
-        const combo = getComboOperand(operand);
-        regs.B = combo % 8;
+        regs.B = getComboOperand(operand) % 8;
         pointer += 2;
         break;
       }
@@ -84,32 +78,25 @@ const runProgram = (instructions, regs) => {
       }
 
       case 'bxc': {
-        regs.B = regs.B ^ regs.C;
+        regs.B = (regs.B ^ regs.C) >>> 0;
         pointer += 2;
         break;
       }
 
       case 'out': {
-        const combo = getComboOperand(operand);
-        output.push(combo % 8);
+        output.push(getComboOperand(operand) % 8);
         pointer += 2;
         break;
       }
 
       case 'bdv': {
-        const combo = getComboOperand(operand); 
-        const numerator = regs.A;
-        const denominator = 2 ** combo;
-        regs.B = Math.trunc(numerator / denominator);
+        regs.B = regs.A >> getComboOperand(operand);
         pointer += 2;
         break;
       }
 
       case 'cdv': {
-        const combo = getComboOperand(operand); 
-        const numerator = regs.A;
-        const denominator = 2 ** combo;
-        regs.C = Math.trunc(numerator / denominator);
+        regs.C = regs.A >> getComboOperand(operand);
         pointer += 2;
         break;
       }
@@ -128,18 +115,3 @@ const initRegs = initRegisters();
 const finalOutput = runProgram(startInstructions, { ...initRegs });
 
 console.log('Result:', finalOutput.join(CHARS.COMMA));
-
-console.log('-- PART 2 --');
-
-const regs = { ...REGISTERS };
-
-while (regs.A <= Number.MAX_SAFE_INTEGER) {
-  const output = runProgram(startInstructions, { ...regs });
-
-  if (output.join(CHARS.COMMA) === startInstructions.join(CHARS.COMMA)) {
-    console.log('Result:', regs.A);
-    break;
-  }
-
-  regs.A++;
-}
