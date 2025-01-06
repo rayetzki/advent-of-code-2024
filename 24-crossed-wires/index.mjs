@@ -1,16 +1,18 @@
 import { getFileInput } from '../utils.mjs';
 import { REGEX } from '../common.mjs';
 
-const input = await getFileInput('input.txt');
+const input = await getFileInput('test.txt');
 
-const [initialWires, formulasLines] = input.split(REGEX.DOUBLE_NEWLINE);
+const [initialWiresLines, formulasLines] = input.split(REGEX.DOUBLE_NEWLINE);
 
-const wires = new Map(
-  initialWires.split(REGEX.NEWLINE).map((line) => {
-    const [wire, initialValue] = line.split(REGEX.SEPARATOR);
-    return [wire, parseInt(initialValue.trim())];
-  }),
+const initialWires = new Map(
+  initialWiresLines.split(REGEX.NEWLINE).map((line) => {
+    const [wire, initialValue] = line.split(': ');
+    return [wire, parseInt(initialValue)];
+  })
 );
+
+const wires = new Map(initialWires);
 
 const formulas = formulasLines.split(REGEX.NEWLINE).reduce((acc, line) => {
   const [operands, result] = line.split(' -> ');
@@ -30,9 +32,10 @@ console.log('-- PART 1 --');
 
 const run = (wire) => {
   if (wires.has(wire)) return wires.get(wire);
-  const [first, action, second] = formulas[wire]; 
-  wires.set(wire, calculateFormula(run(first), action, run(second)));
-  return wires.get(wire);
+  const [first, action, second] = formulas[wire];
+  const result = calculateFormula(run(first), action, run(second));
+  wires.set(wire, result);
+  return result;
 }
 
 for (const formula of Object.keys(formulas)) {
@@ -45,5 +48,3 @@ const part1 = [...wires.keys()]
   .reduce((acc, wire) => acc + wires.get(wire).toString(), '');
 
 console.log('Result:', parseInt(part1, 2));
-
-console.log('-- PART 2 --');
